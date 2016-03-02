@@ -1,25 +1,21 @@
 #ifndef REFLECTOR_HPP
 #define REFLECTOR_HPP
 
-#include "reflectorparser.hpp"
-#include <vector>
+#include <array>
 #include <cstdint>
-
-class ReflectorParser;
 
 class Reflector
 {
-	std::vector<uint8_t> matching;
+	std::array<std::pair<uint8_t, uint8_t>, 128> matching;
 public:
-	Reflector(std::vector<uint8_t> &&matching);
-	Reflector(const std::vector<uint8_t> &matching);
+	Reflector(std::array<std::pair<uint8_t, uint8_t>, 128> &&matching);
+	Reflector(const std::array<std::pair<uint8_t, uint8_t>, 128> &matching);
 	Reflector(Reflector &&reflector);
 	Reflector(const Reflector &reflector);
 	~Reflector();
 
 	uint8_t transform(const uint8_t inputPosition) const;
 
-	friend class ReflectorParser;
 };
 
 #endif // REFLECTOR_HPP

@@ -6,21 +6,15 @@
 #include <random>
 #include <memory>
 
-class ReflectorFactory : public Factory
+class ReflectorFactory
 {
-	std::shared_ptr<Reflector> reflector;
 	const size_t reflectorSize;
-
 	mutable std::default_random_engine randomGenerator;
 
 	Reflector createReflector() const;
 
-	virtual void generate();
-	virtual void read(std::istream &src);
-	virtual void write(std::ostream &dst) const;
-
 public:
-	ReflectorFactory(const std::string &filePath, const size_t reflectorSize = 256);
+	ReflectorFactory(const size_t reflectorSize = 256);
 	virtual ~ReflectorFactory();
 
 	Reflector getReflector() const;

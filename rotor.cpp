@@ -54,6 +54,12 @@ void Rotor::rotate(const uint8_t distance)
 	this->position += distance;
 }
 
+void Rotor::drop()
+{
+	this->nullPosition = 0;
+	this->position = this->nullPosition;
+}
+
 void Rotor::setNullPosition()
 {
 	this->nullPosition = this->position;

@@ -3,11 +3,11 @@
 #include <algorithm>
 #include <chrono>
 #include <utility>
+#include <fstream>
 
-RotorFactory::RotorFactory(const std::string &filePath, const size_t rotorCount, const size_t rotorSize):
-	Factory(filePath),
+RotorFactory::RotorFactory(const std::string &filePath, const size_t rotorSize):
+	filePath(filePath),
 	rotorSize(rotorSize),
-	rotorCount(rotorCount),
 	randomGenerator(std::chrono::system_clock::now().time_since_epoch().count())
 {
 
@@ -31,12 +31,19 @@ Rotor RotorFactory::createRotor() const
 	return Rotor(move(matching));
 }
 
-void RotorFactory::generate()
+std::vector<Rotor> RotorFactory::regenerate(const size_t count)
 {
-	for(size_t i = 0; i < this->rotorCount; ++i)
+	this->rotors.clear();
+	this->rotors.reserve(count);
+	for(size_t i = 0; i < count; ++i)
 	{
-		this->rotors.push_back(std::move(this->createRotor()));
+		this->rotors.push_back(this->createRotor());
 	}
+
+	std::ofstream dst(this->filePath, std::ios_base::trunc | std::ios_base::binary);
+	this->write(dst);
+
+	return this->rotors;
 }
 
 void RotorFactory::read(std::istream &src)
@@ -47,4 +54,11 @@ void RotorFactory::read(std::istream &src)
 void RotorFactory::write(std::ostream &dst) const
 {
 	RotorParser::serialize(this->rotors, dst);
+}
+
+std::vector<Rotor> RotorFactory::read()
+{
+	std::ifstream src(this->filePath, std::ios_base::in | std::ios_base::binary);
+	this->read(src);
+	return this->rotors;
 }

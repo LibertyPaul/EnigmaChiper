@@ -2,20 +2,36 @@
 #include <utility>
 #include <stdexcept>
 
-Reflector::Reflector(std::vector<uint8_t> &&matching): matching(matching)
+Reflector::Reflector(std::array<std::pair<uint8_t, uint8_t>, 128> &&matching): matching(matching)
 {
-	for(size_t i = 0; i < this->matching.size(); ++i)
+
+	std::array<bool, 256> exist;
+	for(auto &value : exist)
 	{
-		if(i == this->matching.at(i))
-		{
-			throw std::runtime_error("Incorrect reflector matching");
-		}
+		value = false;
 	}
+
+
+	for(const auto &match : this->matching)
+	{
+		if(exist.at(match.first))
+		{
+			throw std::runtime_error("Incorrect matching");
+		}
+		exist.at(match.first) = true;
+
+		if(exist.at(match.second))
+		{
+			throw std::runtime_error("Incorrect matching");
+		}
+		exist.at(match.second) = true;
+	}
+
 }
 
-Reflector::Reflector(const std::vector<uint8_t> &matching)
+Reflector::Reflector(const std::array<std::pair<uint8_t, uint8_t>, 128> &matching)
 {
-	std::vector<uint8_t> tmp(matching);
+	std::array<std::pair<uint8_t, uint8_t>, 128> tmp(matching);
 	Reflector(move(tmp));
 }
 
@@ -36,5 +52,17 @@ Reflector::~Reflector()
 
 uint8_t Reflector::transform(const uint8_t inputPosition) const
 {
-	return this->matching.at(inputPosition);
+	for(const auto &match : this->matching)
+	{
+		if(inputPosition == match.first)
+		{
+			return match.second;
+		}
+
+		if(inputPosition == match.second)
+		{
+			return match.first;
+		}
+	}
+
 }

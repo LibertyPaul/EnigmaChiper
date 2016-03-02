@@ -11,8 +11,8 @@ SOURCES += main.cpp \
     rotorparser.cpp \
     reflector.cpp \
     reflectorfactory.cpp \
-    reflectorparser.cpp \
-    parser.cpp
+    parser.cpp \
+    enigmamachine.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -24,6 +24,6 @@ HEADERS += \
     rotorparser.hpp \
     reflector.hpp \
     reflectorfactory.hpp \
-    reflectorparser.hpp \
-    parser.hpp
+    parser.hpp \
+    enigmamachine.hpp
 

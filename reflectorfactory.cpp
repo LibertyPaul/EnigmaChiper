@@ -1,9 +1,9 @@
 #include "reflectorfactory.hpp"
 #include <algorithm>
 
-ReflectorFactory::ReflectorFactory(const std::string &filePath, const size_t reflectorSize):
-	Factory(filePath),
-	reflectorSize(reflectorSize)
+ReflectorFactory::ReflectorFactory(const size_t reflectorSize):
+	reflectorSize(reflectorSize),
+	randomGenerator(42)
 {
 	if(this->reflectorSize < 2)
 	{
@@ -18,43 +18,29 @@ ReflectorFactory::~ReflectorFactory()
 
 Reflector ReflectorFactory::createReflector() const
 {
-	std::vector<uint8_t> matching(this->reflectorSize);
-	int i = 256;
-	while(i --> 0)
+	std::array<uint8_t, 256> raw;
+	int i = 0;
+	for(auto &value : raw)
 	{
-		matching.at(i) = i;
+		value = i++;
 	}
 
-	while(true)
+	std::shuffle(raw.begin(), raw.end(), this->randomGenerator);
+
+
+
+	std::array<std::pair<uint8_t, uint8_t>, 128> matching;
+
+	for(size_t i = 0; i < 128; ++i)
 	{
-		std::shuffle(matching.begin(), matching.end(), this->randomGenerator);
-		try
-		{
-			return Reflector(std::move(matching));
-		}
-		catch(std::runtime_error &)
-		{
-
-		}
+		matching[i].first = raw[i * 2];
+		matching[i].second = raw[i * 2 + 1];
 	}
-}
 
-void ReflectorFactory::generate()
-{
-	this->reflector = std::make_shared<Reflector>(std::move(this->createReflector()));
-}
-
-void ReflectorFactory::read(std::istream &src)
-{
-	this->reflector = std::make_shared<Reflector>(std::move(ReflectorParser::parse(src)));
-}
-
-void ReflectorFactory::write(std::ostream &dst) const
-{
-	ReflectorParser::serialize(*this->reflector.get(), dst);
+	return Reflector(matching);
 }
 
 Reflector ReflectorFactory::getReflector() const
 {
-	return *this->reflector.get();
+	return this->createReflector();
 }

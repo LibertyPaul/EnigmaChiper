@@ -22,6 +22,7 @@ public:
     ~Rotor();
 
 	void rotate(const uint8_t distance = 1);
+	void drop();
 	void setNullPosition();
     bool isTurned() const;
     uint8_t transformForward(const uint8_t absoluteInputPosition) const;
