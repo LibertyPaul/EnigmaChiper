@@ -29,10 +29,10 @@ Reflector::Reflector(std::array<std::pair<uint8_t, uint8_t>, 128> &&matching): m
 
 }
 
-Reflector::Reflector(const std::array<std::pair<uint8_t, uint8_t>, 128> &matching)
+Reflector::Reflector(const std::array<std::pair<uint8_t, uint8_t>, 128> &matching):
+	Reflector(move(std::array<std::pair<uint8_t, uint8_t>, 128>(matching)))
 {
-	std::array<std::pair<uint8_t, uint8_t>, 128> tmp(matching);
-	Reflector(move(tmp));
+
 }
 
 Reflector::Reflector(Reflector &&reflector): matching(std::move(reflector.matching))

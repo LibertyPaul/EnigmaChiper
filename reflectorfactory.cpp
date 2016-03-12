@@ -37,10 +37,12 @@ Reflector ReflectorFactory::createReflector() const
 		matching[i].second = raw[i * 2 + 1];
 	}
 
-	return Reflector(matching);
+	Reflector result(matching);
+	return result;
 }
 
 Reflector ReflectorFactory::getReflector() const
 {
-	return this->createReflector();
+	Reflector result = this->createReflector();
+	return result;
 }

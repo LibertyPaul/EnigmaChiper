@@ -34,22 +34,16 @@ void testRotor(){
 }
 
 void testReflector(){
-	std::vector<Rotor> rotors = RotorFactory("/tmp/rotors").regenerate(1);
 	Reflector reflector = ReflectorFactory().getReflector();
 
 	for(size_t i = 0; i < UCHAR_MAX; ++i)
 	{
 		const uint8_t src1 = static_cast<uint8_t>(i);
-		const uint8_t enc1 = rotors.at(0).transformForward(src1);
-		const uint8_t ref1 = reflector.transform(enc1);
-		const uint8_t dec1 = rotors.at(0).transformBackward(ref1);
+		const uint8_t ref1 = reflector.transform(src1);
 
-		const uint8_t src2 = dec1;
-		const uint8_t enc2 = rotors.at(0).transformForward(src2);
-		const uint8_t ref2 = reflector.transform(enc2);
-		const uint8_t dec2 = rotors.at(0).transformBackward(ref2);
+		const uint8_t ref2 = reflector.transform(ref1);
 
-		if(src1 != dec2)
+		if(src1 != ref2)
 		{
 			std::cout << "FAIL" << std::endl;
 			return;
@@ -78,9 +72,7 @@ void man(const std::string &progName)
 
 int main(int argc, const char **argv)
 {
-	testReflector();
-	return 0;
-
+	/*
 	argv[0] = "enigma";
 	argv[1] = "--encrypt";
 	argv[2] = "rotors.txt";
@@ -91,6 +83,7 @@ int main(int argc, const char **argv)
 	argv[7] = "21";
 	argv[8] = "42";
 	argc = 9;
+	*/
 
 	const std::string progName(argv[0]);
 
@@ -156,14 +149,18 @@ int main(int argc, const char **argv)
 		std::ifstream src(srcFilePath, std::ios_base::binary);
 		std::ofstream dst(dstFilePath, std::ios_base::binary | std::ios_base::trunc);
 
-
-		while(src.eof() == false)
+		while(true)
 		{
 			uint8_t srcSymbol;
 			src.read(reinterpret_cast<char *>(&srcSymbol), sizeof(srcSymbol));
+			if(src.good() == false){
+				break;
+			}
+
 			uint8_t dstSymbol = enigmaMachine.encrypt(srcSymbol);
 			dst.write(reinterpret_cast<char *>(&dstSymbol), sizeof(dstSymbol));
 		}
+		return 0;
 	}
 	else
 	{
