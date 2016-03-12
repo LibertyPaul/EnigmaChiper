@@ -7,61 +7,6 @@
 #include <climits>
 
 
-using namespace std;
-
-
-
-
-
-void testRotor(){
-	RotorFactory rf("/tmp/rotors");
-	std::vector<Rotor> rotors = rf.regenerate(1);
-
-	for(size_t i = 0; i < UCHAR_MAX; ++i)
-	{
-		uint8_t src = static_cast<uint8_t>(i);
-		uint8_t enc = rotors.at(0).transformForward(src);
-		uint8_t dec = rotors.at(0).transformBackward(enc);
-
-		if(src != dec)
-		{
-			std::cout << "FAIL" << std::endl;
-			return;
-		}
-	}
-
-	std::cout << "SUCCESS" << std::endl;
-}
-
-void testReflector(){
-	Reflector reflector = ReflectorFactory().getReflector();
-
-	for(size_t i = 0; i < UCHAR_MAX; ++i)
-	{
-		const uint8_t src1 = static_cast<uint8_t>(i);
-		const uint8_t ref1 = reflector.transform(src1);
-
-		const uint8_t ref2 = reflector.transform(ref1);
-
-		if(src1 != ref2)
-		{
-			std::cout << "FAIL" << std::endl;
-			return;
-		}
-	}
-
-	std::cout << "SUCCESS" << std::endl;
-
-}
-
-
-
-
-
-
-
-
-
 void man(const std::string &progName)
 {
 	std::cout << "Usage:" << std::endl;
@@ -72,19 +17,6 @@ void man(const std::string &progName)
 
 int main(int argc, const char **argv)
 {
-	/*
-	argv[0] = "enigma";
-	argv[1] = "--encrypt";
-	argv[2] = "rotors.txt";
-	argv[3] = "encrypted.txt";
-	argv[4] = "rotors.txt";
-	argv[5] = "12";
-	argv[6] = "53";
-	argv[7] = "21";
-	argv[8] = "42";
-	argc = 9;
-	*/
-
 	const std::string progName(argv[0]);
 
 	if(argc < 2)

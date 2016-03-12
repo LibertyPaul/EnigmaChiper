@@ -6,7 +6,6 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     rotor.cpp \
-    factory.cpp \
     rotorfactory.cpp \
     rotorparser.cpp \
     reflector.cpp \
@@ -19,7 +18,6 @@ qtcAddDeployment()
 
 HEADERS += \
     rotor.hpp \
-    factory.hpp \
     rotorfactory.hpp \
     rotorparser.hpp \
     reflector.hpp \
