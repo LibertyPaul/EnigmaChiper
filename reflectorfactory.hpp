@@ -1,7 +1,6 @@
 #ifndef REFLECTORFACTORY_HPP
 #define REFLECTORFACTORY_HPP
 
-#include "factory.hpp"
 #include "reflector.hpp"
 #include <random>
 #include <memory>
